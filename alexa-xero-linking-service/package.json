@@ -1,0 +1,13 @@
+{
+  "name": "alexa-xero-linking-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jordan Walsh",
+  "license": "MIT",
+  "dependencies": {
+    "claudia-api-builder": "^2.4.2",
+    "claudiajs-dynamodb": "^0.8.8",
+    "qs": "^6.4.0",
+    "xero-node": "^2.1.5"
+  }
+}
