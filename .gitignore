@@ -3,3 +3,4 @@ env.json
 claudia.json
 config.json
 .DS_Store
+.history

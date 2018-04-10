@@ -59,6 +59,43 @@ claudia update --profile <profile_from_credentials_file> --set-env-from-json env
 
 This is now set up to add to your Alexa Skill.
 
+## Update AWS Role
+
+Claudia automatically creates an execution role within AWS for the Lambda to run as.  In our use case, the Lambda need permission to both DynamoDB and S3, so we need to add these policies.
+
+1. Log in to AWS
+2. Browse to IAM
+3. Browse to Roles and find the role that Claudia created (something_executor)
+4. Add the following inline policies
+    - DynamoDB Full Access
+    - S3 Read Only
+5. Save the role 
+
+You've now given your Lambda access to S3 and DynamoDB
+
+## Create the DynamoDB Table
+
+You need to create a table that the Lambda uses as temporal storage of oauth tokens.
+
+1. Browse to DynamoDB in the 'us-east-1' region (this is where the code is set)
+2. Create a new Table
+3. Call the table 'alexa-xbot-link'
+4. Set the ID field as 'token' and leave it as a string
+5. Click Create
+
+Your lambda now has a table it can store some information in.
+
+## Create the S3 bucket for your private key (Partner API Only)
+
+In order for the Lambda to make calls to the Xero API, it needs to use a private key file.  We don't want to check this in to our repo, and we also don't want it easily accessible from the web, so we use a private S3 bucket and we give the Lambda permission to read from S3.
+
+1. Create a new S3 bucket 
+2. Set permissions to be private
+3. Upload your private key to this bucket and note the filename
+4. In your `env.json` you need to set your s3 bucket name and your private key file name
+
+The lambda can now use these config variables to look up the s3 bucket and find the private key file to authenticate calls to Xero.
+
 ## Adding the login process to your Alexa Skill
 
 1. Create an account on developer.amazon.com.
@@ -96,6 +133,8 @@ Enter the following information:
 5. Click Save.
 
 Your skill now has account linking enabled.
+
+**Note** You need to make your skill available for beta testing before the linking process will work.  Any skills that are not available for Beta test will simply fail the linking process with no error.
 
 ## Executing the flow
 
